@@ -2,3 +2,4 @@
 media
 __debug_*
 .vscode
+.DS_Store
