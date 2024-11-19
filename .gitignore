@@ -1,0 +1,4 @@
+*.sum
+media
+__debug_*
+.vscode
