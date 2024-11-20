@@ -2,15 +2,22 @@ package main
 
 import (
 	"io"
+	"log"
 	"mime"
 	"net/http"
 	"os"
 	"path/filepath"
+	"server/config"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	err := config.Init()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 	router := gin.Default()
 
 	router.GET("/", func(c *gin.Context) {
@@ -75,5 +82,5 @@ func main() {
 		buffer := make([]byte, 4096*4096)
 		io.CopyBuffer(c.Writer, file, buffer)
 	})
-	router.Run(":9944")
+	router.Run(config.Conf.Port)
 }
