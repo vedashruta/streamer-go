@@ -14,6 +14,7 @@ var (
 type Server struct {
 	Port        string
 	Concurrency int
+	BufferSize  int
 }
 
 func Init() (err error) {
@@ -23,6 +24,10 @@ func Init() (err error) {
 	}
 	Conf.Port = os.Getenv("PORT")
 	Conf.Concurrency, err = strconv.Atoi(os.Getenv("CONCURRENCY"))
+	if err != nil {
+		return
+	}
+	Conf.BufferSize, err = strconv.Atoi(os.Getenv("BUFFER_SIZE"))
 	if err != nil {
 		return
 	}

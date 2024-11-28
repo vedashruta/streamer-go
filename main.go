@@ -79,8 +79,11 @@ func main() {
 		ext := filepath.Ext(fileName)
 		contentType := mime.TypeByExtension(ext)
 		c.Header("Content-Type", contentType)
-		buffer := make([]byte, 4096*4096)
-		io.CopyBuffer(c.Writer, file, buffer)
+		buffer := make([]byte, config.Conf.BufferSize)
+		if _, err := io.CopyBuffer(c.Writer, file, buffer); err != nil {
+			c.String(http.StatusInternalServerError, "Error streaming file")
+			return
+		}
 	})
 	router.Run(config.Conf.Port)
 }
