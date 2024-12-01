@@ -1,7 +1,4 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
-name: Go
+name: Go Build
 
 on:
   push:
@@ -10,18 +7,39 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    # Check out the repository
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
+    # Set up Go environment
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.22.4'
 
-    - name: Build
+    # Run tests
+    - name: Run Tests
       run: |
-        GOOS=windows GOARCH=amd64 go build -o server.exe
-        go build -o server
+        go test ./... -v
+
+    # Build for Windows
+    - name: Build Windows Binary
+      run: |
+        mkdir -p bin
+        GOOS=windows GOARCH=amd64 go build -o bin/server.exe
+
+    # Build for Default Architecture
+    - name: Build Default Binary
+      run: |
+        mkdir -p bin
+        go build -o bin/server
+
+    # Upload binaries as artifacts
+    - name: Upload Binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: go-binaries
+        path: bin/
