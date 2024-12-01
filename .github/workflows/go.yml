@@ -1,9 +1,7 @@
-name: Go Build
+name: Build and Publish Release
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
     branches: [ "master" ]
 
 jobs:
@@ -19,25 +17,26 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.22.4'
-  
-    #Download dependencies
-    - run : go mod tidy
-
+        
+    # Download dependencies
+    - run: go mod tidy
+    
     # Build for Windows
     - name: Build Windows Binary
       run: |
-        mkdir -p bin
-        GOOS=windows GOARCH=amd64 go build -o bin/server.exe
+        mkdir -p builds
+        GOOS=windows GOARCH=amd64 go build -o builds/server.exe
 
     # Build for Default Architecture
     - name: Build Default Binary
       run: |
-        mkdir -p bin
-        go build -o bin/server
+        mkdir -p builds
+        go build -o builds/server
 
-    # Upload binaries as artifacts
-    - name: Upload Binaries
-      uses: actions/upload-artifact@v3
+    # Create a Release and Upload Artifacts
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
       with:
-        name: go-binaries
-        path: bin/
+        files: builds/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
