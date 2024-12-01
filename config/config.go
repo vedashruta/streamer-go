@@ -18,7 +18,7 @@ type Server struct {
 }
 
 func Init() (err error) {
-	err = godotenv.Load(".env")
+	err = godotenv.Load("./.env")
 	if err != nil {
 		return
 	}
