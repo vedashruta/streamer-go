@@ -29,6 +29,14 @@ jobs:
         GOOS=windows GOARCH=amd64 go build -o builds/server.exe
         go build -o builds/server
   
+    # Create a Git Tag
+    - name: Create Tag
+      run: |
+        tag_name="v$(date +'%Y%m%d%H%M%S')"
+        echo "tag=$tag_name" >> $GITHUB_ENV
+        git tag -a $tag_name -m "Automated release $tag_name"
+        git push origin $tag_name
+    
     # Create a Release and Upload Artifacts
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1
