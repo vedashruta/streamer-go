@@ -39,4 +39,4 @@ jobs:
       with:
         files: builds/*
       env:
-        GITHUB_TOKEN: ${{ secrets.MACHINE_TOKEN }}
+        MACHINE_TOKEN: ${{ secrets.MACHINE_TOKEN }}
