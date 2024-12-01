@@ -23,5 +23,5 @@ jobs:
 
     - name: Build
       run: |
-        GOOS=windows GOARCH=amd64 go build
-        go build
+        GOOS=windows GOARCH=amd64 go build -o server.exe
+        go build -o server
