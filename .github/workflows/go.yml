@@ -35,16 +35,19 @@ jobs:
         git config --global user.name "${{ secrets.MACHINE_USER_NAME }}"
         git config --global user.email  "${{ secrets.MACHINE_USER_EMAIL }}"
 
-    - name: Create Tag
+    - name: Create and Push Tag
       run: |
         tag_name="v$(date +'%Y%m%d%H%M%S')"
         echo "tag=$tag_name" >> $GITHUB_ENV
         git tag -a $tag_name -m "Automated release $tag_name"
         git push origin $tag_name
+      
     
-    - name: Upload Release Assets
+    - name: Publish Release
       uses: softprops/action-gh-release@v1
       with:
         files: builds/*
+        tag_name: ${{ env.tag }}  # Use the created tag
       env:
-        MACHINE_TOKEN: ${{ secrets.MACHINE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.MACHINE_TOKEN }}
+      
